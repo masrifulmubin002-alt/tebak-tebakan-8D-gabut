@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tebak-Tebakan Game</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #101020;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.game {
+  background: #1b1b35;
+  width: 100%;
+  max-width: 430px;
+  padding: 25px;
+  border-radius: 22px;
+  text-align: center;
+  border: 1px solid #35355c;
+}
+
+h1 {
+  color: #a99aff;
+  font-size: 27px;
+}
+
+.score {
+  display: flex;
+  justify-content: space-between;
+  background: #292947;
+  padding: 13px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.question {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 30px 0;
+  line-height: 1.5;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #44446c;
+  border-radius: 12px;
+  background: #111126;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  text-align: center;
+}
+
+input:focus {
+  border-color: #9a83ff;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 12px;
+  background: #8065ff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(.97);
+}
+
+.hint {
+  background: #34304f;
+}
+
+.next {
+  background: #16a36b;
+  display: none;
+}
+
+#result {
+  margin-top: 18px;
+  font-weight: bold;
+  line-height: 1.5;
+}
+
+small {
+  color: #aaa;
+  display: block;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<h1>🧠 TEBAK-TEBAKAN</h1>
+<p>Uji pengetahuan lu!</p>
+
+<div class="score">
+  <span>⭐ Skor: <b id="score">0</b></span>
+  <span>Soal: <b id="number">1</b>/10</span>
+</div>
+
+<div class="question" id="question">
+  orang orang apa yg berat?
+</div>
+
+<input
+  type="text"
+  id="answer"
+  placeholder="Ketik jawabannya cuki..."
+>
+
+<button onclick="checkAnswer()">
+  JAWAB EH
+</button>
+
+<button class="hint" onclick="showHint()">
+  💡 klu ga?
+</button>
+
+<button class="next" id="next" onclick="nextQuestion()">
+  LANJOTT! →
+</button>
+
+<div id="result"></div>
+
+<small>© 2026 Tebak-Tebakan Game</small>
+
+</div>
+
+<script>
+
+const questions = [
+  {
+    q: "orang orang apa yg berat?",
+    a: ["bambang tabung gas, wkwk"],
+    h: "pemain bola"
+  },
+  {
+    q: "Siapa yg gay dikelas?",
+    a: ["organ"],
+    h: "cium orang mulu njr."
+  },
+  {
+    q: "siapa walas kelas 7 di kelas 8D?",
+    a: ["bu dp"],
+    h: "guru sbk."
+  },
+  {
+    q: "siapa yg paling berisik, cowo?",
+    a: ["kholid"],
+    h: "anaknya ADI."
+  },
+  {
+    q: "siapa yg bucin mulu",
+    a: ["kenzie", "ipeh"],
+    h: "depannya K atau ga I."
+  },
+  {
+    q: "siapa yg paling berisik, cewe?",
+    a: ["isma"],
+    h: "suka teriak2"
+  },
+  {
+    q: "siapa yg paling tinggi di kelas, cewe?",
+    a: ["rere"],
+    h: "jangkung lah pokony"
+  },
+  {
+    q: "Apa yang selalu naik tetapi tidak pernah turun?",
+    a: ["umur", "usia"],
+    h: "karena umur ngga bisa turun lah."
+  },
+  {
+    q: "siapa yg paling tinggi di kelas, cowo?",
+    a: ["dapa"],
+    h: "monster."
+  },
+  {
+    q: "siapa walas 8D sekarang?",
+    a: ["miss vanessya"],
+    h: "guru b inggris."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+function checkAnswer() {
+  if (answered) return;
+
+  const input = document
+    .getElementById("answer")
+    .value.trim().toLowerCase();
+
+  const result = document.getElementById("result");
+
+  if (!input) {
+    result.innerText = "Masukkin jawaban dulu bung!";
+    return;
+  }
+
+  const correct = questions[current].a;
+
+  if (correct.includes(input)) {
+    score += 10;
+    result.innerText = "🎉 BENAR! egiluy!";
+    result.style.color = "#4ade80";
+  } else {
+    result.innerText = "❌ SALAH nyomet! Jawaban: " +
+      correct[0].toUpperCase();
+    result.style.color = "#ff7373";
+  }
+
+  answered = true;
+
+  document.getElementById("score").innerText = score;
+  document.getElementById("next").style.display = "block";
+}
+
+function showHint() {
+  document.getElementById("result").innerText =
+    "💡 " + questions[current].h;
+}
+
+function nextQuestion() {
+  current++;
+
+  if (current >= questions.length) {
+    document.querySelector(".game").innerHTML = `
+      <h1>🏆 SELESAI!</h1>
+      <h2>Skor kamu: ${score}/100</h2>
+      <p>Mksh yg udh main!</p>
+      <button onclick="location.reload()">
+        🔄 MAIN LAGI GA
+      </button>
+    `;
+    return;
+  }
+
+  answered = false;
+
+  document.getElementById("question").innerText =
+    questions[current].q;
+
+  document.getElementById("number").innerText =
+    current + 1;
+
+  document.getElementById("answer").value = "";
+  document.getElementById("result").innerText = "";
+  document.getElementById("next").style.display = "none";
+}
+
+document.getElementById("answer").addEventListener(
+  "keydown",
+  function(event) {
+    if (event.key === "Enter") {
+      checkAnswer();
+    }
+  }
+);
+
+</script>
+
+</body>
+</html>
